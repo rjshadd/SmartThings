@@ -13,38 +13,38 @@
  *  for the specific language governing permissions and limitations under the License.
  *
  */
+ 
 definition(
-    name: "Switch Triggers Routine",
-    namespace: "rjshadd",
-    author: "Randy Shaddach",
-    description: "Runs a routine when a switch changes to a specified state",
-    category: "Convenience",
-    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
-    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
-    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
-
+	name: "Switch Triggers Routine",
+	namespace: "rjshadd",
+	author: "Randy Shaddach",
+	description: "Runs a routine when a switch changes to a specified state",
+	category: "Convenience",
+	iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+	iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+	iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
 
 preferences {
 	page(name: "configure")
 }
 
 def configure() {
-    dynamicPage(name: "configure", title: "Run a routine when a switch changes", install: true, uninstall: true) {
+	dynamicPage(name: "configure", title: "Run a routine when a switch changes", install: true, uninstall: true) {
 		section("Select the control switch and state") {
 			input "theSwitch", "capability.switch", required: true
-            input "switchState", "enum", title: "Switch state", options: ["on","off"], required: true
+			input "switchState", "enum", title: "Switch state", options: ["on","off"], required: true
 		}
 
-        def actions = location.helloHome?.getPhrases()*.label
-        if (actions) {
-            actions.sort()
-            
-            section("Select the routine to run") {
-                log.trace actions
-                input "theRoutine", "enum", title: "Routine to execute when turned on", options: actions, required: true
+		def actions = location.helloHome?.getPhrases()*.label
+		if (actions) {
+			actions.sort()
+			
+			section("Select the routine to run") {
+				log.trace actions
+				input "theRoutine", "enum", title: "Routine to execute when turned on", options: actions, required: true
 			}
 		}
-    }
+	}
 }
 
 def installed() {
@@ -60,10 +60,10 @@ def updated() {
 
 def initialize() {
 	log.debug "Subscribe to $theSwitch turning $switchState"
-    subscribe(theSwitch, "switch.$switchState", handler)
+	subscribe(theSwitch, "switch.$switchState", handler)
 }
 
 def handler(evt) {
-    log.debug "${settings.theSwitch} (${settings.switchState}) triggers routine ${settings.theRoutine}"
-    location.helloHome?.execute(settings.theRoutine)
+	log.debug "${settings.theSwitch} (${settings.switchState}) triggers routine ${settings.theRoutine}"
+	location.helloHome?.execute(settings.theRoutine)
 }
