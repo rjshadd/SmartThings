@@ -40,7 +40,7 @@ def configure() {
 			actions.sort()
 
 			section("Select the routine to run") {
-				log.trace actions
+				//log.trace actions
 				input "theRoutine", "enum", title: "Routine to execute when turned on", options: actions, required: true
 			}
 		}
