@@ -13,20 +13,25 @@
  *  for the specific language governing permissions and limitations under the License.
  *
  */
+
 definition(
-    name: "Trigger Routine",
-    namespace: "rjshadd",
-    author: "Randy Shaddach",
-    description: "Runs a routine based on a defined trigger event",
-    category: "Convenience",
-    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
-    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
-    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+	name: "Trigger Routine",
+	namespace: "rjshadd",
+	author: "Randy Shaddach",
+	description: "Runs a routine based on a defined trigger event",
+	category: "Convenience",
+	iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+	iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+	iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png"
+	singleInstance: true
+	)
 
 
 preferences {
-	section("Title") {
-		// TODO: put inputs here
+	page(name: "mainPage", title: "Child Apps", install: true, uninstall: true) {
+		section {
+			app(name: "childApps", appName: "Trigger Routine Child", namespace: "rjshadd", title: "New Routine Trigger", multiple: true)
+		}
 	}
 }
 
