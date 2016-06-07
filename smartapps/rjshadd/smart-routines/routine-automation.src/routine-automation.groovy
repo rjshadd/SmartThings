@@ -14,14 +14,16 @@
  *
  */
 definition(
-    name: "Routine Automation",
-    namespace: "rjshadd/smart routines",
-    author: "Randy Shaddach",
-    description: "Child of the Smart Routines SmartApp. Executes a routine based on a simple trigger.",
-    category: "Convenience",
-    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
-    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
-    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+	name: "Routine Automation",
+	namespace: "rjshadd/smart routines",
+	author: "Randy Shaddach",
+	description: "Child of the Smart Routines SmartApp. Executes a routine based on a simple trigger.",
+	category: "Convenience",
+	iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+	iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+	iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+	parent: "rjshadd/smart routines:Smart Routines"
+	)
 
 
 preferences {
