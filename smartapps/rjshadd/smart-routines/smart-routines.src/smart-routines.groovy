@@ -17,7 +17,7 @@ definition(
 	name: "Smart Routines",
 	namespace: "rjshadd/smart routines",
 	author: "Randy Shaddach",
-	description: "Parent of the Smart Routines SmartApp. Executes a routine based on a simple trigger.",
+	description: "Executes a routine based on a simple trigger",
 	category: "Convenience",
 	iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
 	iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
@@ -27,7 +27,7 @@ definition(
 
 
 preferences {
-	page(name: "mainPage", title: "Child Apps", install: true, uninstall: true) {
+	page(name: "mainPage", title: "Automations", install: true, uninstall: true) {
 		section {
 			app(name: "childApps", appName: "Routine Automation", namespace: "rjshadd/smart routines", title: "New Routine Automation", multiple: true)
 		}
