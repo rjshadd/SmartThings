@@ -14,19 +14,25 @@
  *
  */
 definition(
-    name: "Smart Routines",
-    namespace: "rjshadd/smart routines",
-    author: "Randy Shaddach",
-    description: "Parent of the Smart Routines SmartApp. Executes a routine based on a simple trigger.",
-    category: "Convenience",
-    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
-    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
-    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+	name: "Smart Routines",
+	namespace: "rjshadd/smart routines",
+	author: "Randy Shaddach",
+	description: "Parent of the Smart Routines SmartApp. Executes a routine based on a simple trigger.",
+	category: "Convenience",
+	iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+	iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+	iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png"
+	
+	// prevent users from installing more than one parent smartapp
+	singleInstance: true
+	)
 
 
 preferences {
-	section("Title") {
-		// TODO: put inputs here
+	page(name: "mainPage", title: "Child Apps", install: true, uninstall: true) {
+		section {
+			app(name: "childApps", appName: "Routine Automation", namespace: "rjshadd/smart routines", title: "New Routine Automation", multiple: true)
+		}
 	}
 }
 
