@@ -21,10 +21,8 @@ definition(
 	category: "Convenience",
 	iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
 	iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
-	iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png"
-	
-	// prevent users from installing more than one parent smartapp
-	singleInstance: true
+	iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+	singleInstance: true // prevent users from installing more than one parent smartapp
 	)
 
 
@@ -50,7 +48,9 @@ def updated() {
 }
 
 def initialize() {
-	// TODO: subscribe to attributes, devices, locations, etc.
+	// nothing needed here, since the child apps will handle preferences/subscriptions
+	log.debug "there are ${childApps.size()} child smartapps"
+	childApps.each {child ->
+        log.debug "child app: ${child.label}"
+    }
 }
-
-// TODO: implement event handlers
