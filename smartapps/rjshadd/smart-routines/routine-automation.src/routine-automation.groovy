@@ -27,26 +27,83 @@ definition(
 
 
 preferences {
-	section("Title") {
-		// TODO: put inputs here
-	}
+	page name: "mainPage", title: "Automate a Routine", install: false, uninstall: true, nextPage: "namePage"
+	page name: "namePage", title: "Automate a Routine", install: true, uninstall: true
 }
 
 def installed() {
 	log.debug "Installed with settings: ${settings}"
-
 	initialize()
 }
 
 def updated() {
 	log.debug "Updated with settings: ${settings}"
-
 	unsubscribe()
 	initialize()
 }
 
 def initialize() {
-	// TODO: subscribe to attributes, devices, locations, etc.
+	// if the user did not override the label, set the label to the default
+	if (!overrideLabel) {
+		app.updateLabel(defaultLabel())
+	}
+	// TODO: schedule the switch handler to trigger the routine
+	log.debug "Subscribe to $theSwitch turning $switchState"
+	subscribe(theSwitch, "switch.$switchState", handler)
 }
 
-// TODO: implement event handlers
+// main page to select the trigger and routine to run
+def mainPage() {
+	dynamicPage(name: "mainPage") {
+		section("Select the control switch and state") {
+			input "theSwitch", "capability.switch", required: true
+			input "switchState", "enum", title: "Switch state", options: ["on","off"], required: true
+		}
+
+		def actions = location.helloHome?.getPhrases()*.label
+		if (actions) {
+			actions.sort()
+			
+			section("Select the routine to run") {
+				log.trace actions
+				input "theRoutine", "enum", title: "Routine to execute when turned on", options: actions, required: true
+			}
+		}
+	}
+}
+
+// page for allowing the user to give the automation a custom name
+def namePage() {
+    if (!overrideLabel) {
+        // if the user selects to not change the label, give a default label
+        def l = defaultLabel()
+        log.debug "will set default label of $l"
+        app.updateLabel(l)
+    }
+    dynamicPage(name: "namePage") {
+        if (overrideLabel) {
+            section("Automation name") {
+                label title: "Enter custom name", defaultValue: app.label, required: false
+            }
+        } else {
+            section("Automation name") {
+                paragraph app.label
+            }
+        }
+        section {
+            input "overrideLabel", "bool", title: "Edit automation name", defaultValue: "false", required: "false", submitOnChange: true
+        }
+    }
+}
+
+// a method that will set the default label of the automation.
+// It uses the switch and routine to create the automation label
+def defaultLabel() {
+    "Run $theRoutine when $theSwitch turns $switchState"
+}
+
+// the switch handler method that runs the routine 
+def handler(evt) {
+	log.debug "${settings.theSwitch} (${settings.switchState}) triggers routine ${settings.theRoutine}"
+	location.helloHome?.execute(settings.theRoutine)
+}
