@@ -38,19 +38,31 @@ preferences {
 
 def installed() {
 	log.debug "Installed with settings: ${settings}"
-
 	initialize()
 }
 
 def updated() {
 	log.debug "Updated with settings: ${settings}"
-
 	unsubscribe()
 	initialize()
 }
 
+// subscribe to alarm state changes
 def initialize() {
-	// TODO: subscribe to attributes, devices, locations, etc.
+	subscribe(location, "alarmSystemStatus", alarmHandler)
 }
 
-// TODO: implement event handlers
+
+// alarm state change event handler
+def alarmHandler(evt) {
+	log.debug "Alarm Handler value: ${evt.value}"
+	//log.debug "alarm state: ${location.currentState("alarmSystemStatus")?.value}"
+    
+	if (evt.value == "off") {
+    	log.debug "Alarm turned off"
+    } else if (evt.value == "away") {
+    	log.debug "Alarm set to away"
+    } else if (evt.value == "stay") {
+    	log.debug "Alarm set to stay"
+    }
+}

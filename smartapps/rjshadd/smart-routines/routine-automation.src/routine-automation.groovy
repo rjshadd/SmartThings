@@ -47,7 +47,7 @@ def initialize() {
 	if (!overrideLabel) {
 		app.updateLabel(defaultLabel())
 	}
-	// TODO: schedule the switch handler to trigger the routine
+	// schedule the switch handler to trigger the routine
 	log.debug "Subscribe to $theSwitch turning $switchState"
 	subscribe(theSwitch, "switch.$switchState", handler)
 }
