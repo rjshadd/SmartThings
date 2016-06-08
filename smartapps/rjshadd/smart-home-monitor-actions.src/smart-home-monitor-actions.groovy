@@ -14,26 +14,26 @@
  *
  */
 definition(
-    name: "Smart Home Monitor Actions",
-    namespace: "rjshadd",
-    author: "Randy Shaddach",
-    description: "Perform various actions when the Smart Home Monitor changes state",
-    category: "Convenience",
-    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
-    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
-    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+	name: "Smart Home Monitor Actions",
+	namespace: "rjshadd",
+	author: "Randy Shaddach",
+	description: "Perform various actions when the Smart Home Monitor changes state",
+	category: "Convenience",
+	iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+	iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+	iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
 
 
 preferences {
 	page(name: "mainPage", title: "Smart Home Monitor Actions", uninstall: true, install: true) {
-        section("SHM Set to Away") {
-        	
-            input "awayMode", "mode", title: "mode when away", multiple: false, required: false
-            input "awaySwitchOn", "capability.switch", title: "turn these switches on", multiple: true, required: false
-            input "awaySwitchOff", "capability.switch", title: "turn these switches off", multiple: true, required: false
-            
-        }
-    }
+		section("SHM Set to Away") {
+			
+			input "awayMode", "mode", title: "mode when away", multiple: false, required: false
+			input "awaySwitchOn", "capability.switch", title: "turn these switches on", multiple: true, required: false
+			input "awaySwitchOff", "capability.switch", title: "turn these switches off", multiple: true, required: false
+			
+		}
+	}
 }
 
 def installed() {
@@ -57,12 +57,12 @@ def initialize() {
 def alarmHandler(evt) {
 	log.debug "Alarm Handler value: ${evt.value}"
 	//log.debug "alarm state: ${location.currentState("alarmSystemStatus")?.value}"
-    
+	
 	if (evt.value == "off") {
-    	log.debug "Alarm turned off"
-    } else if (evt.value == "away") {
-    	log.debug "Alarm set to away"
-    } else if (evt.value == "stay") {
-    	log.debug "Alarm set to stay"
-    }
+		log.debug "Alarm turned off"
+	} else if (evt.value == "away") {
+		log.debug "Alarm set to away"
+	} else if (evt.value == "stay") {
+		log.debug "Alarm set to stay"
+	}
 }
