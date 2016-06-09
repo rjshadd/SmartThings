@@ -21,18 +21,30 @@ definition(
 	category: "Convenience",
 	iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
 	iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
-	iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+	iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+    singleInstance: true)
 
 
 preferences {
-	page(name: "mainPage", title: "Smart Home Monitor Actions", uninstall: true, install: true) {
-		section("SHM Set to Away") {
-			
-			input "awayMode", "mode", title: "mode when away", multiple: false, required: false
-			input "awaySwitchOn", "capability.switch", title: "turn these switches on", multiple: true, required: false
-			input "awaySwitchOff", "capability.switch", title: "turn these switches off", multiple: true, required: false
-			
-		}
+	page(name: "mainPage", title: "Smart Home Monitor Actions") {
+        // away section
+        section("When Smart Home Monitor is set to away...") {
+            input "awayMode", "mode", title: "Change to this mode", multiple: false, required: false
+            input "awaySwitchesOn", "capability.switch", title: "Turn these switches on", multiple: true, required: false
+            input "awaySwitchesOff", "capability.switch", title: "Turn these switches off", multiple: true, required: false
+        }
+        // stay section
+        section("When Smart Home Monitor is set to stay...") {
+            input "stayMode", "mode", title: "Change to this mode", multiple: false, required: false
+            input "staySwitchesOn", "capability.switch", title: "Turn these switches on", multiple: true, required: false
+            input "staySwitchesOff", "capability.switch", title: "Turn these switches off", multiple: true, required: false
+        }
+        // disarm section
+        section("When Smart Home Monitor is set to disarm...") {
+            input "disarmMode", "mode", title: "Change to this mode", multiple: false, required: false
+            input "disarmSwitchesOn", "capability.switch", title: "Turn these switches on", multiple: true, required: false
+            input "disarmSwitchesOff", "capability.switch", title: "Turn these switches off", multiple: true, required: false
+        }
 	}
 }
 
@@ -52,17 +64,46 @@ def initialize() {
 	subscribe(location, "alarmSystemStatus", alarmHandler)
 }
 
-
 // alarm state change event handler
 def alarmHandler(evt) {
-	log.debug "Alarm Handler value: ${evt.value}"
+	//log.debug "Alarm Handler value: ${evt.value}"
 	//log.debug "alarm state: ${location.currentState("alarmSystemStatus")?.value}"
 	
-	if (evt.value == "off") {
-		log.debug "Alarm turned off"
-	} else if (evt.value == "away") {
-		log.debug "Alarm set to away"
+	if (evt.value == "away") {
+		log.debug "SHM Actions: shm set to away"
+        if (settings.awayMode) {
+        	changeMode(settings.awayMode)
+            awaySwitchesOn.on()
+            awaySwitchesOff.off()
+        }
 	} else if (evt.value == "stay") {
-		log.debug "Alarm set to stay"
+		log.debug "SHM Actions: shm set to stay"
+        if (settings.stayMode) {
+        	changeMode(settings.stayMode)
+            staySwitchesOn.on()
+            staySwitchesOff.off()
+        }
+	} else if (evt.value == "off") {
+		log.debug "SHM Actions: shm set to disarmed"
+        if (settings.disarmMode) {
+        	changeMode(settings.disarmMode)
+            disarmSwitchesOn.on()
+            disarmSwitchesOff.off()
+        }
+	} else {
+    	log.debug "SHM Actions: unkown shm state: ${evt.value}"
+    }
+}
+
+// function to change the mode
+def changeMode(newMode) {
+	log.debug "changeMode, location.mode = $location.mode, newMode = $newMode, location.modes = $location.modes"
+
+	if (location.mode != newMode) {
+		if (location.modes?.find{it.name == newMode}) {
+			setLocationMode(newMode)
+		} else {
+			log.warn "Tried to change to undefined mode '${newMode}'"
+		}
 	}
 }
