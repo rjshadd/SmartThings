@@ -26,22 +26,39 @@ definition(
 
 
 preferences {
-	page(name: "mainPage", title: "Alarm Automations", install: true, uninstall: true) {
-        // away section
-        section("When Smart Home Monitor is set to away...") {
+	page(name: "awayPage", title: "Away Mode", install: false, uninstall: true, nextPage: "stayPage") {
+    	//away mode triggers
+        section("Set Smart Home Monitor to AWAY when...") {
+        	input "awayMomentaryTrigger", "capability.momentary", title: "This momentary switch is pressed", multiple: false, required: false
+    	}
+        //away mode actions
+        section("When Smart Home Monitor is set to AWAY...") {
             input "awayMode", "mode", title: "Change to this mode", multiple: false, required: false
             input "awaySwitchesOn", "capability.switch", title: "Turn these switches on", multiple: true, required: false
             input "awaySwitchesOff", "capability.switch", title: "Turn these switches off", multiple: true, required: false
-            
         }
-        // stay section
-        section("When Smart Home Monitor is set to stay...") {
+	}
+    
+    page(name: "stayPage", title: "Stay Mode", install: false, uninstall: true, nextPage: "disarmPage") {
+    	//stay mode triggers
+        section("Set Smart Home Monitor to STAY when...") {
+        	input "stayMomentaryTrigger", "capability.momentary", title: "This momentary switch is pressed", multiple: false, required: false
+    	}
+        //stay mode actions
+        section("When Smart Home Monitor is set to STAY...") {
             input "stayMode", "mode", title: "Change to this mode", multiple: false, required: false
             input "staySwitchesOn", "capability.switch", title: "Turn these switches on", multiple: true, required: false
             input "staySwitchesOff", "capability.switch", title: "Turn these switches off", multiple: true, required: false
         }
-        // disarm section
-        section("When Smart Home Monitor is set to disarm...") {
+	}
+    
+    page(name: "disarmPage", title: "Disarm Mode", install: true, uninstall: true) {
+        //disarm mode triggers
+        section("Set Smart Home Monitor to DISARM when...") {
+        	input "disarmMomentaryTrigger", "capability.momentary", title: "This momentary switch is pressed", multiple: false, required: false
+    	}
+        //disarm mode actions
+        section("When Smart Home Monitor is set to DISARM...") {
             input "disarmMode", "mode", title: "Change to this mode", multiple: false, required: false
             input "disarmSwitchesOn", "capability.switch", title: "Turn these switches on", multiple: true, required: false
             input "disarmSwitchesOff", "capability.switch", title: "Turn these switches off", multiple: true, required: false
@@ -62,14 +79,48 @@ def updated() {
 
 //subscribe to alarm state changes
 def initialize() {
+	//subscribe to away mode triggers
+    if (awayMomentaryTrigger) {
+    	subscribe(awayMomentaryTrigger, "switch.on", awayTriggerHandler)
+    }
+    
+    //subscribe to stay mode triggers
+    if (stayMomentaryTrigger) {
+    	subscribe(stayMomentaryTrigger, "switch.on", stayTriggerHandler)
+    }
+    
+    //subscribe to disarm mode triggers
+    if (disarmMomentaryTrigger) {
+    	subscribe(disarmMomentaryTrigger, "switch.on", disarmTriggerHandler)
+    }
+    
+    //subscribe to shm alarm mode changes
 	subscribe(location, "alarmSystemStatus", alarmHandler)
+}
+
+//event handler for actions that trigger SHM away
+def awayTriggerHandler(evt) {
+	log.info "AlarmAutomations changing SHM to AWAY (${evt.name} changed to ${evt.value})"
+    sendLocationEvent(name: "alarmSystemStatus", value: "away")
+}
+
+//event handler for actions that trigger SHM stay
+def stayTriggerHandler(evt) {
+	log.info "AlarmAutomations changing SHM to STAY (${evt.name} changed to ${evt.value})"
+    sendLocationEvent(name: "alarmSystemStatus", value: "stay")
+}
+
+//event handler for actions that trigger SHM disarm
+def disarmTriggerHandler(evt) {
+	log.info "AlarmAutomations changing SHM to DISARM (${evt.name} changed to ${evt.value})"
+    sendLocationEvent(name: "alarmSystemStatus", value: "off")
 }
 
 //alarm state change event handler
 def alarmHandler(evt) {
 	//log.debug "AlarmAutomations handler value: ${evt.value}"
 	//log.debug "alarm state: ${location.currentState("alarmSystemStatus")?.value}"
-	
+    
     switch (evt.value) {
     	case "away":
             //log.debug "AlarmAutomations handling away mode actions"
